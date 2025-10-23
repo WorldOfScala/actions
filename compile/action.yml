@@ -11,7 +11,7 @@ runs:
     - name: Cache lookup
       id: compilation-cache
       if: ${{ !contains(github.event.pull_request.body, 'ci:skip-cache') }}
-      uses: ./restore-compilation-cache
+      uses: /WorldOfScala/actions/restore-compilation-cache@master
       with:
         key: ${{ inputs.cache-key }}
 
