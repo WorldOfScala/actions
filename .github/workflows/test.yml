@@ -8,6 +8,10 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+       - name: Checkout code
+         uses: actions/checkout@v3
+       - name: Set up Scala
+         uses: /WorldOfScala/actions/setup-scala@master
        - name: Restore compilation cache
          uses: /WorldOfScala/actions/restore-compilation-cache@master
        - name: Compile (main & tests)
