@@ -1,0 +1,15 @@
+name: Test
+
+on:
+  workflow_call:
+  
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+       - name: Restore compilation cache
+         uses: /WorldOfScala/actions/restore-compilation-cache@master
+       - name: Compile (main & tests)
+         shell: bash
+         run: sbt 'test'
