@@ -1,18 +1,15 @@
 on:
   workflow_call:
     inputs:
-      group_id:
-        required: true
+      label:
         type: string
-      num_groups:
-        required: true
-        type: string
+        default: ephemeral
   
 jobs:
   publish-pr:
     name: Publish PR Ephemeral Environment
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'ephemeral')
+    if: contains(github.event.pull_request.labels.*.name, inputs.label)
     steps:
        - name: Push ephemeral environment
          run: |
