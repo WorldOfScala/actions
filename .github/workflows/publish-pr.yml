@@ -9,7 +9,7 @@ on:
   
 jobs:
   publish-pr:
-    name: Publish PR Ephemeral Environment
+    name: Publish PR
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, inputs.label)
     steps:
