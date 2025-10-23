@@ -1,0 +1,27 @@
+on:
+  workflow_call:
+    inputs:
+      group_id:
+        required: true
+        type: string
+      num_groups:
+        required: true
+        type: string
+  
+jobs:
+  publish-pr:
+    name: Publish PR Ephemeral Environment
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'ephemeral')
+    steps:
+       - name: Push ephemeral environment
+         run: |
+              echo "Checking out code ${{ github.event.pull_request.number }}"
+              echo " Unlabeling ${{ github.event.label.name }}"
+              VERSION="pr-${{ github.event.pull_request.number }}"
+              echo "Pushing ephemeral environment for version $VERSION"
+       - name: Tag PR for ArgoCD
+         uses: actions-ecosystem/action-add-labels@v1
+         with:
+            github_token: ${{ github.token }}
+            labels: "argocd/review"
