@@ -54,7 +54,7 @@ runs:
          if: ${{ inputs.codecov-upload == 'true' }}
          uses: "codecov/codecov-action@v5"
          with:
-           token: secrets.CODECOV_TOKEN
+           token: ${{ secrets.CODECOV_TOKEN }}
            fail_ci_if_error: true
        - name: SonarCloud scan 
          if: ${{ inputs.sonar-upload == 'true' }}
