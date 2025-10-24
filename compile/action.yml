@@ -7,6 +7,9 @@ inputs:
   java-version:
     description: Java version to setup (25)
     default: "25"
+  memory-limit:
+    description: Memory limit for sbt (2048 MB)
+    default: "2048"
   cache-key:
     description: Cache key
     default: target

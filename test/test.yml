@@ -1,0 +1,33 @@
+name: Test
+description: Test the project
+inputs:
+  java-distribution:
+    description: JDK vendor (zulu, temurin, etc.)
+    default: zulu
+  java-version:
+    description: Java version to setup (25)
+    default: "25"
+  memory-limit:
+    description: Memory limit for sbt (2048 MB)
+    default: "2048"
+  cache-key:
+    description: Cache key
+    default: target
+runs:
+  using: "composite"
+  steps:
+       - name: Checkout code
+         uses: actions/checkout@v3
+       - name: Set up SBT
+         uses: /WorldOfScala/actions/setup-sbt@master
+         with:
+           java-distribution: ${{ inputs.java-distribution }}
+           java-version: ${{ inputs.java-version }}
+
+       - name: Restore compilation cache
+         uses: /WorldOfScala/actions/restore-compilation-cache@master
+         with:
+            key: ${{ inputs.cache-key }}
+       - name: Compile (main & tests)
+         shell: bash
+         run: sbt -mem ${ { inputs.memory-limit } } 'test'
