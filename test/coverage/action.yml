@@ -18,12 +18,12 @@ inputs:
   command:
     description: Test command to run
     default: coverage; test; coverageReport; coverageAggregate
-  sonar-upload:
-    description: Whether to upload results to SonarCloud
-    default: "false"
-  codecov-upload:
+  codecov-token:
     description: Whether to upload results to Codecov
-    default: "false"
+  github-token:
+    description: Needed to upload results to GitHub
+  sonar-token:
+    description: Whether to upload results to SonarCloud
 runs:
   using: "composite"
   steps:
@@ -51,14 +51,14 @@ runs:
              sbt -mem ${{ inputs.memory-limit }} "++ ${{ inputs.scala-version }}; ${{ inputs.command }}"
            fi
        - name: "Upload coverage to Codecov"
-         if: ${{ inputs.codecov-upload == 'true' }}
+         if: ${{ inputs.codecov-token != '' }}
          uses: "codecov/codecov-action@v5"
          with:
-           token: ${{ secrets.CODECOV_TOKEN }}
+           token: ${{ inputs.codecov-token }}
            fail_ci_if_error: true
        - name: SonarCloud scan 
-         if: ${{ inputs.sonar-upload == 'true' }}
+         if: ${{ inputs.sonar-token != '' && inputs.github-token != '' }}
          uses: sonarsource/sonarqube-scan-action@master
          env:
-           GITHUB_TOKEN: secrets.GITHUB_TOKEN  # Needed to get PR information, if any
-           SONAR_TOKEN: secrets.SONAR_TOKEN
+           GITHUB_TOKEN: ${{ inputs.github-token }}
+           SONAR_TOKEN: ${{ inputs.sonar-token }}
