@@ -1,4 +1,4 @@
-name: Test
+name: Test / ready
 description: Test the project
 inputs:
   java-distribution:
