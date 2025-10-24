@@ -1,6 +1,9 @@
 name: Test / ready
 description: Test the project
 inputs:
+  scala-version:
+    description: Scala version to use for tests
+    default: "3"
   java-distribution:
     description: JDK vendor (zulu, temurin, etc.)
     default: zulu
@@ -42,7 +45,7 @@ runs:
        - name: Run coverage test
          shell: bash
         # Scala 3 is not fully supported for coverage yet
-         run: sbt -mem ${{ inputs.memory-limit }} "++ 2.13; ${{ inputs.command }}"
+         run: sbt -mem ${{ inputs.memory-limit }} "++ ${{ inputs.scala-version }}; ${{ inputs.command }}"
        - name: "Upload coverage to Codecov"
          if: ${{ inputs.codecov-upload == 'true' }}
          uses: "codecov/codecov-action@v5"
