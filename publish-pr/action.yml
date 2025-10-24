@@ -1,19 +1,26 @@
 name: Publish PR
-
-on:
-  workflow_call:
-    inputs:
-      label:
-        type: string
-        default: ephemeral
-  
-jobs:
-  publish-pr:
-    name: Publish PR
-    runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, inputs.label)
-    steps:
+description: Publish a PR if it has a specific label
+inputs:
+  java-distribution:
+    description: JDK vendor (zulu, temurin, etc.)
+    default: zulu
+  java-version:
+    description: Java version to setup (25)
+    default: "25"
+  memory-limit:
+    description: Memory limit for sbt (2048 MB)
+    default: "2048"
+  cache-key:
+    description: Cache key
+    default: target
+  command:
+    description: Test command to run
+    default: test
+runs:
+  using: "composite"
+  steps:
        - name: Push ephemeral environment
+         shell: bash
          run: |
               echo "Checking out code ${{ github.event.pull_request.number }}"
               echo " Unlabeling ${{ github.event.label.name }}"
