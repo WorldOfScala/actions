@@ -36,7 +36,7 @@ runs:
             key: ${{ inputs.cache-key }}
        - name: Compile (main & tests)
          shell: bash
-         run: echo sbt -mem ${ { inputs.memory-limit } } '${{ inputs.command }}'
+         run: echo sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
 
        - name: Push ephemeral environment
          shell: bash

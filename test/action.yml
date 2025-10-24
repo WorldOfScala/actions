@@ -33,4 +33,4 @@ runs:
             key: ${{ inputs.cache-key }}
        - name: Compile (main & tests)
          shell: bash
-         run: sbt -mem ${ { inputs.memory-limit } } '${{ inputs.command }}'
+         run: sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
