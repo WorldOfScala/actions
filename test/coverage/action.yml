@@ -1,0 +1,57 @@
+name: Test / ready
+description: Test the project
+inputs:
+  java-distribution:
+    description: JDK vendor (zulu, temurin, etc.)
+    default: zulu
+  java-version:
+    description: Java version to setup (25)
+    default: "25"
+  memory-limit:
+    description: Memory limit for sbt (2048 MB)
+    default: "2048"
+  cache-key:
+    description: Cache key
+    default: target
+  command:
+    description: Test command to run
+    default: coverage; test; coverageReport; coverageAggregate
+  sonar-upload:
+    description: Whether to upload results to SonarCloud
+    default: "false"
+  codecov-upload:
+    description: Whether to upload results to Codecov
+    default: "false"
+runs:
+  using: "composite"
+  steps:
+       - name: Checkout code
+         uses: actions/checkout@v5
+         with:
+          fetch-depth: 0
+       - name: Set up SBT
+         uses: /WorldOfScala/actions/setup-sbt@master
+         with:
+           distribution: ${{ inputs.java-distribution }}
+           java-version: ${{ inputs.java-version }}
+
+       - name: Restore compilation cache
+         uses: /WorldOfScala/actions/restore-compilation-cache@master
+         with:
+            key: ${{ inputs.cache-key }}
+       - name: Run coverage test
+         shell: bash
+        # Scala 3 is not fully supported for coverage yet
+         run: sbt -mem ${{ inputs.memory-limit }} "++ 2.13; ${{ inputs.command }}"
+       - name: "Upload coverage to Codecov"
+         if: ${{ inputs.codecov-upload == 'true' }}
+         uses: "codecov/codecov-action@v5"
+         with:
+           token: ${{ secrets.CODECOV_TOKEN }}
+           fail_ci_if_error: true
+       - name: SonarCloud scan 
+         if: ${{ inputs.sonar-upload == 'true' }}
+         uses: sonarsource/sonarqube-scan-action@master
+         env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
