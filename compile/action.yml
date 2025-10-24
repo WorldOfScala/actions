@@ -13,6 +13,7 @@ inputs:
   cache-key:
     description: Cache key
     default: target
+  
 runs:
   using: "composite"
   steps:
@@ -33,7 +34,7 @@ runs:
 
     - name: Compile (main & tests)
       shell: bash
-      run: sbt 'compile; Test / compile'
+      run: sbt -mem ${{ inputs.memory-limit }} 'compile; Test / compile'
 
     - name: Upload tests compilation cache
       uses: actions/cache/save@v4

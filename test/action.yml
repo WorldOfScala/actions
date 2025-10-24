@@ -13,6 +13,9 @@ inputs:
   cache-key:
     description: Cache key
     default: target
+  command:
+    description: Test command to run
+    default: test
 runs:
   using: "composite"
   steps:
@@ -30,4 +33,4 @@ runs:
             key: ${{ inputs.cache-key }}
        - name: Compile (main & tests)
          shell: bash
-         run: sbt -mem ${ { inputs.memory-limit } } 'test'
+         run: sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
