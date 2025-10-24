@@ -15,10 +15,29 @@ inputs:
     default: target
   command:
     description: Test command to run
-    default: test
+    default: publish
+  label-on-success:
+    description: Label to add on successful publish
+
 runs:
   using: "composite"
   steps:
+       - name: Checkout code
+         uses: actions/checkout@v3
+       - name: Set up SBT
+         uses: /WorldOfScala/actions/setup-sbt@master
+         with:
+           java-distribution: ${{ inputs.java-distribution }}
+           java-version: ${{ inputs.java-version }}
+
+       - name: Restore compilation cache
+         uses: /WorldOfScala/actions/restore-compilation-cache@master
+         with:
+            key: ${{ inputs.cache-key }}
+       - name: Compile (main & tests)
+         shell: bash
+         run: echo sbt -mem ${ { inputs.memory-limit } } '${{ inputs.command }}'
+
        - name: Push ephemeral environment
          shell: bash
          run: |
@@ -27,7 +46,8 @@ runs:
               VERSION="pr-${{ github.event.pull_request.number }}"
               echo "Pushing ephemeral environment for version $VERSION"
        - name: Tag PR for ArgoCD
+         if: ${{ inputs.label-on-success != '' }}
          uses: actions-ecosystem/action-add-labels@v1
          with:
             github_token: ${{ github.token }}
-            labels: "argocd/review"
+            labels: ${{ inputs.label-on-success }}
