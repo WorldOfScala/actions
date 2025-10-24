@@ -22,7 +22,7 @@ runs:
     - name: Set up Scala
       uses: /WorldOfScala/actions/setup-sbt@master
       with:
-        java-distribution: ${{ inputs.java-distribution }}
+        distribution: ${{ inputs.java-distribution }}
         java-version: ${{ inputs.java-version }}
 
     - name: Cache lookup
