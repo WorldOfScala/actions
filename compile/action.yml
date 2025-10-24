@@ -1,12 +1,25 @@
 name: Compile
 description: Compiles the project
 inputs:
+  java-distribution:
+    description: JDK vendor (zulu, temurin, etc.)
+    default: zulu
+  java-version:
+    description: Java version to setup (25)
+    default: "25"
   cache-key:
     description: Cache key
     default: target
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Scala
+      uses: /WorldOfScala/actions/setup-sbt@master
+      with:
+        java-distribution: ${{ inputs.java-distribution }}
+        java-version: ${{ inputs.java-version }}
 
     - name: Cache lookup
       id: compilation-cache
@@ -35,4 +48,3 @@ runs:
           modules/**/target/
           project/target
         key: ${{ inputs.cache-key }}-main-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/main/scala/**') }}
-
