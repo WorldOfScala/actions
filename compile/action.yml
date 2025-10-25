@@ -18,7 +18,7 @@ inputs:
     default: target
   command:
     description: Compile command to run
-    default: compile; Test / compile
+    default: "compile; Test / compile"
   
 runs:
   using: "composite"
