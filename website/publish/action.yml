@@ -20,10 +20,12 @@ inputs:
     description: Whether to deploy the website
     default: "false"
 
+
+
 runs:
   using: "composite"
+  
   steps:
-      #  - name: Checkout code
       #    uses: actions/checkout@v3
       #  - name: Setup Graphviz
       #    uses: ts-graphviz/setup-graphviz@v2      
@@ -52,6 +54,7 @@ runs:
             path: "target/site"
 
        - name: Deploy to GitHub Pages
+         
          id: deployment
          uses: actions/deploy-pages@v4
 
