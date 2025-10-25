@@ -36,7 +36,7 @@ runs:
        - name: Restore compilation cache
          uses: /WorldOfScala/actions/restore-compilation-cache@master
          with:
-            key: ${{ inputs.cache-key }}
+            key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
        - name: Compile (main & tests)
          shell: bash
          run: echo sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'

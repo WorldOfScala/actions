@@ -41,7 +41,7 @@ runs:
        - name: Restore compilation cache
          uses: /WorldOfScala/actions/restore-compilation-cache@master
          with:
-            key: ${{ inputs.cache-key }}
+            key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
        - name: Run coverage test
          shell: bash
          # Scala 3 is not fully supported for coverage yet

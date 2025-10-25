@@ -2,7 +2,7 @@ name: Compile
 description: Compiles the project
 inputs:
   scala-version:
-    description: Scala version to use for tests ("+", "++ 2.13;" "++ 3;", etc...)
+    description: Scala version to use for tests (2, 2.13, 3 ... etc...)
     default: ""
   java-distribution:
     description: JDK vendor (zulu, temurin, etc.)
@@ -16,6 +16,9 @@ inputs:
   cache-key:
     description: Cache key
     default: target
+  command:
+    description: Compile command to run
+    default: compile; Test / compile
   
 runs:
   using: "composite"
@@ -33,11 +36,17 @@ runs:
       if: ${{ !contains(github.event.pull_request.body, 'ci:skip-cache') }}
       uses: /WorldOfScala/actions/restore-compilation-cache@master
       with:
-        key: ${{ inputs.cache-key }}
+        key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
 
     - name: Compile (main & tests)
       shell: bash
-      run: sbt -mem ${{ inputs.memory-limit }} '${{ inputs.scala-version }} compile; Test / compile'
+      run: |
+       if [ "${{ inputs.scala-version }}" != "" ]; then
+         COMPILE_CMD='++ ${{ inputs.scala-version }}; ${{ imputs.command }}'
+       else
+         COMPILE_CMD='${{ imputs.command }}'
+       fi
+       sbt -mem ${{ inputs.memory-limit }} $COMPILE_CMD
 
     - name: Upload tests compilation cache
       uses: actions/cache/save@v4
@@ -45,7 +54,7 @@ runs:
         path: |
           target/scala*/*test*
           modules/**/target/scala*/*test*
-        key: ${{ inputs.cache-key }}-tests-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/test/scala/**') }}
+        key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}-tests-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/test/scala/**') }}
 
     - name: Upload main compilation cache
       uses: actions/cache/save@v4
@@ -54,4 +63,4 @@ runs:
           target/
           modules/**/target/
           project/target
-        key: ${{ inputs.cache-key }}-main-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/main/scala/**') }}
+        key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}-main-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/main/scala/**') }}

@@ -4,9 +4,6 @@ inputs:
   key:
     description: Cache key
     default: target
-  scala-version:
-    description: Scala version to use for tests ("++ 2.13;" "++ 3;", etc...)
-    default: ""
 
 outputs:
   cache-hit:
@@ -25,9 +22,9 @@ runs:
           project/target
         key: ${{ inputs.key }}-${{ inputs.scala-version }}-main-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/main/scala/**') }}
         restore-keys: |
-          ${{ inputs.key }}-${{ inputs.scala-version }}-main-${{ hashFiles('build.sbt') }}
-          ${{ inputs.key }}-${{ inputs.scala-version }}-main
-          ${{ inputs.key }}-${{ inputs.scala-version }}
+          ${{ inputs.key }}-main-${{ hashFiles('build.sbt') }}
+          ${{ inputs.key }}-main
+          ${{ inputs.key }}
     - name: Restore tests compilation cache (${{ inputs.key }})
       id: impl_tests
       uses: actions/cache/restore@v4
@@ -37,6 +34,6 @@ runs:
           modules/**/target/scala*/*test*
         key: ${{ inputs.key }}-${{ inputs.scala-version }}-tests-${{ hashFiles('build.sbt') }}-${{ hashFiles('modules/**/src/test/scala/**') }}
         restore-keys: |
-          ${{ inputs.key }}-${{ inputs.scala-version }}-tests-${{ hashFiles('build.sbt') }}
-          ${{ inputs.key }}-${{ inputs.scala-version }}-tests
-          ${{ inputs.key }}-${{ inputs.scala-version }}
+          ${{ inputs.key }}-tests-${{ hashFiles('build.sbt') }}
+          ${{ inputs.key }}-tests
+          ${{ inputs.key }}
