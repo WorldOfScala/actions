@@ -45,7 +45,12 @@ runs:
        - name: Run coverage test
          shell: bash
          # Scala 3 is not fully supported for coverage yet
-         run:  sbt -mem ${{ inputs.memory-limit }} "${{ inputs.scala-version }} ${{ inputs.command }}"
+         run: |
+          if [ '${{ inputs.scala-version }}' != "" ]; then
+            sbt -mem ${{ inputs.memory-limit }} '++ ${{ inputs.scala-version }}; ${{ inputs.command }}'
+          else
+            sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
+          fi
            
        - name: "Upload coverage to Codecov"
          if: ${{ inputs.codecov-token != '' }}

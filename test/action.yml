@@ -22,18 +22,22 @@ inputs:
 runs:
   using: "composite"
   steps:
-       - name: Checkout code
-         uses: actions/checkout@v3
-       - name: Set up SBT
-         uses: /WorldOfScala/actions/setup-sbt@master
-         with:
-           distribution: ${{ inputs.java-distribution }}
-           java-version: ${{ inputs.java-version }}
-
-       - name: Restore compilation cache
-         uses: /WorldOfScala/actions/restore-compilation-cache@master
-         with:
-            key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
-       - name: Compile (main & tests)
-         shell: bash
-         run: sbt -mem ${{ inputs.memory-limit }} '${{ inputs.scala-version }} ${{ inputs.command }}'
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up SBT
+      uses: /WorldOfScala/actions/setup-sbt@master
+      with:
+        distribution: ${{ inputs.java-distribution }}
+        java-version: ${{ inputs.java-version }}
+    - name: Restore compilation cache
+      uses: /WorldOfScala/actions/restore-compilation-cache@master
+      with:
+         key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
+    - name: Compile (main & tests)
+      shell: bash
+      run: |
+       if [ '${{ inputs.scala-version }}' != "" ]; then
+         sbt -mem ${{ inputs.memory-limit }} '++ ${{ inputs.scala-version }}; ${{ inputs.command }}'
+       else
+         sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
+       fi
