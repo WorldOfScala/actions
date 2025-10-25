@@ -2,7 +2,7 @@ name: Test / draft
 description: Test the project
 inputs:
   scala-version:
-    description: Scala version to use (+, + 2.13, etc...)
+    description: Scala version to use for tests ("+", "++ 2.13;" "++ 3;", etc...)
     default: "+"
   java-distribution:
     description: JDK vendor (zulu, temurin, etc.)
