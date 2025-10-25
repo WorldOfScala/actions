@@ -42,9 +42,9 @@ runs:
       shell: bash
       run: |
        if [ '${{ inputs.scala-version }}' != "" ]; then
-         COMPILE_CMD='++ ${{ inputs.scala-version }}; ${{ inputs.command }}'
+         COMPILE_CMD=++ ${{ inputs.scala-version }}; ${{ inputs.command }}
        else
-         COMPILE_CMD='${{ inputs.command }}'
+         COMPILE_CMD=${{ inputs.command }}
        fi
        sbt -mem ${{ inputs.memory-limit }} $COMPILE_CMD
 
