@@ -20,23 +20,22 @@ inputs:
 runs:
   using: "composite"
   steps:
-       - name: Checkout code
-         uses: actions/checkout@v3
-       - name: Setup Graphviz
-         uses: ts-graphviz/setup-graphviz@v2      
-       - name: Set up SBT
-         uses: /WorldOfScala/actions/setup-sbt@master
-         with:
-           distribution: ${{ inputs.java-distribution }}
-           java-version: ${{ inputs.java-version }}
-
-       - name: Restore compilation cache
-         uses: /WorldOfScala/actions/restore-compilation-cache@master
-         with:
-            key: ${{ inputs.cache-key }}
-       - name: Compile (main & tests)
-         shell: bash
-         run: VERSION=`git describe --tags --abbrev=0 | sed "s/v//"` sbt '${{ inputs.command }}'
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Graphviz
+      uses: ts-graphviz/setup-graphviz@v2      
+    - name: Set up SBT
+      uses: /WorldOfScala/actions/setup-sbt@master
+      with:
+        distribution: ${{ inputs.java-distribution }}
+        java-version: ${{ inputs.java-version }}
+    - name: Restore compilation cache
+      uses: /WorldOfScala/actions/restore-compilation-cache@master
+      with:
+         key: ${{ inputs.cache-key }}
+    - name: Compile (main & tests)
+      shell: bash
+      run: VERSION=`git describe --tags --abbrev=0 | sed "s/v//"` sbt '${{ inputs.command }}'
 
 
 

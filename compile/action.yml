@@ -1,6 +1,9 @@
 name: Compile
 description: Compiles the project
 inputs:
+  scala-version:
+    description: Scala version to use (+, + 2.13, etc...)
+    default: ""
   java-distribution:
     description: JDK vendor (zulu, temurin, etc.)
     default: zulu
@@ -34,7 +37,7 @@ runs:
 
     - name: Compile (main & tests)
       shell: bash
-      run: sbt -mem ${{ inputs.memory-limit }} 'compile; Test / compile'
+      run: sbt -mem ${{ inputs.memory-limit }} '${{ inputs.scala-version }} compile; Test / compile'
 
     - name: Upload tests compilation cache
       uses: actions/cache/save@v4
