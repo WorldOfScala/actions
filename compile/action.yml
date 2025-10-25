@@ -3,7 +3,7 @@ description: Compiles the project
 inputs:
   scala-version:
     description: Scala version to use (+, + 2.13, etc...)
-    default: ""
+    default: "+"
   java-distribution:
     description: JDK vendor (zulu, temurin, etc.)
     default: zulu
