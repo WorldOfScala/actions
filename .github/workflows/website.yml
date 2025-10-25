@@ -6,26 +6,32 @@ permissions:
   id-token: write
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       java-distribution:
         description: JDK vendor (zulu, temurin, etc.)
+        type: string
         default: zulu
       java-version:
         description: Java version to setup (25)
-        default: "25"
+        type: number
+        default: 25
       memory-limit:
         description: Memory limit for sbt (2048 MB)
-        default: "2048"
+        type: number
+        default: 2048
       cache-key:
         description: Cache key
+        type: string
         default: target
       command:
         description: Test command to run
+        type: string
         default: website
       publish:
         description: Whether to deploy the website
-        default: "false"
+        type: boolean
+        default: false
 
 
 
@@ -69,6 +75,9 @@ jobs:
       id-token: write   # to verify the deployment originates from an appropriate source
 
     # Deploy to the github-pages environment
+    # environment:
+    #   name: github-pages
+    #   url: ${{ steps.deployment.outputs.page_url }}
 
     # Specify runner + deployment step
 
