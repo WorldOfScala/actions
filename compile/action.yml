@@ -41,11 +41,11 @@ runs:
     - name: Compile (main & tests)
       shell: bash
       run: |
-       COMPILE_CMD='${{ inputs.command }}'
        if [ '${{ inputs.scala-version }}' != "" ]; then
-         COMPILE_CMD='++ ${{ inputs.scala-version }}; ${{ inputs.command }}'
+         sbt -mem ${{ inputs.memory-limit }} '++ ${{ inputs.scala-version }}; ${{ inputs.command }}'
+       else
+         sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
        fi
-       sbt -mem ${{ inputs.memory-limit }} $COMPILE_CMD
 
     - name: Upload tests compilation cache
       uses: actions/cache/save@v4
