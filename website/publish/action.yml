@@ -14,48 +14,30 @@ inputs:
     description: Cache key
     default: target
   command:
-    description: Test command to run
+    description: Website command to run
     default: website
-  publish:
-    description: Whether to deploy the website
-    default: "false"
-
-
 
 runs:
   using: "composite"
   
   steps:
-      #    uses: actions/checkout@v3
-      #  - name: Setup Graphviz
-      #    uses: ts-graphviz/setup-graphviz@v2      
-      #  - name: Set up SBT
-      #    uses: /WorldOfScala/actions/setup-sbt@master
-      #    with:
-      #      distribution: ${{ inputs.java-distribution }}
-      #      java-version: ${{ inputs.java-version }}
-
-      #  - name: Restore compilation cache
-      #    uses: /WorldOfScala/actions/restore-compilation-cache@master
-      #    with:
-      #       key: ${{ inputs.cache-key }}
-      #  - name: Compile (main & tests)
-      #    shell: bash
-      #    run: VERSION=`git describe --tags --abbrev=0 | sed "s/v//"` sbt '${{ inputs.command }}'
-       - name: Website Build
-         uses: /WorldOfScala/actions/website@master
-
-       - name: Setup Pages
-         uses: actions/configure-pages@v5
-       - name: Upload artifact
-         if: ${{ inputs.publish == 'true' }}
-         uses: actions/upload-pages-artifact@v4
-         with:
-            path: "target/site"
-
-       - name: Deploy to GitHub Pages
-         
-         id: deployment
-         uses: actions/deploy-pages@v4
+   - name: Website Build
+     uses: /WorldOfScala/actions/website@master
+     with:
+        java-distribution: ${{ inputs.java-distribution }}
+        java-version: ${{ inputs.java-version }}
+        memory-limit: ${{ inputs.memory-limit }}
+        cache-key: ${{ inputs.cache-key }}
+        command: ${{ inputs.command }}
+   - name: Setup Pages
+     uses: actions/configure-pages@v5
+   - name: Upload artifact
+     uses: actions/upload-pages-artifact@v4
+     with:
+        path: "target/site"
+   - name: Deploy to GitHub Pages
+     
+     id: deployment
+     uses: actions/deploy-pages@v4
 
 

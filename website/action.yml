@@ -14,11 +14,8 @@ inputs:
     description: Cache key
     default: target
   command:
-    description: Test command to run
+    description: Website command to run
     default: website
-  publish:
-    description: Whether to deploy the website
-    default: "false"
 
 runs:
   using: "composite"
