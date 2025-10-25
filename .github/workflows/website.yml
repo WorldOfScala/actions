@@ -68,7 +68,7 @@ jobs:
   publish:
     needs: website
     runs-on: ubuntu-latest
-    if: ${{ inputs.publish == 'true' }}
+    if: ${{ inputs.publish }}
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write      # to deploy to Pages
