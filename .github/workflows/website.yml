@@ -66,6 +66,7 @@ jobs:
          with:
             path: "target/site"
   publish:
+
     needs: website
     runs-on: ubuntu-latest
     if: ${{ inputs.publish }}
@@ -75,9 +76,6 @@ jobs:
       id-token: write   # to verify the deployment originates from an appropriate source
 
     # Deploy to the github-pages environment
-    # environment:
-    #   name: github-pages
-    #   url: ${{ steps.deployment.outputs.page_url }}
 
     # Specify runner + deployment step
 
