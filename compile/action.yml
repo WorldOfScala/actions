@@ -41,7 +41,7 @@ runs:
     - name: Compile (main & tests)
       shell: bash
       run: |
-       if [ "${{ inputs.scala-version }}" != "" ]; then
+       if [ '${{ inputs.scala-version }}' != "" ]; then
          COMPILE_CMD='++ ${{ inputs.scala-version }}; ${{ imputs.command }}'
        else
          COMPILE_CMD='${{ imputs.command }}'
