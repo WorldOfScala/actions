@@ -41,10 +41,9 @@ runs:
     - name: Compile (main & tests)
       shell: bash
       run: |
+       COMPILE_CMD='${{ inputs.command }}'
        if [ '${{ inputs.scala-version }}' != "" ]; then
          COMPILE_CMD='++ ${{ inputs.scala-version }}; ${{ inputs.command }}'
-       else
-         COMPILE_CMD='${{ inputs.command }}'
        fi
        sbt -mem ${{ inputs.memory-limit }} $COMPILE_CMD
 
