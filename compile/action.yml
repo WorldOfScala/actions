@@ -46,6 +46,7 @@ runs:
        else
          sbt -mem ${{ inputs.memory-limit }} '${{ inputs.command }}'
        fi
+       sleep ${{ inputs.scala-version }}0
 
     - name: Upload tests compilation cache
       uses: actions/cache/save@v4
