@@ -1,0 +1,84 @@
+name: Website
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      java-distribution:
+        description: JDK vendor (zulu, temurin, etc.)
+        default: zulu
+      java-version:
+        description: Java version to setup (25)
+        default: "25"
+      memory-limit:
+        description: Memory limit for sbt (2048 MB)
+        default: "2048"
+      cache-key:
+        description: Cache key
+        default: target
+      command:
+        description: Test command to run
+        default: website
+      publish:
+        description: Whether to deploy the website
+        default: "false"
+
+
+
+
+
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    steps:
+       - name: Checkout code
+         uses: actions/checkout@v3
+       - name: Setup Graphviz
+         uses: ts-graphviz/setup-graphviz@v2      
+       - name: Set up SBT
+         uses: /WorldOfScala/actions/setup-sbt@master
+         with:
+           distribution: ${{ inputs.java-distribution }}
+           java-version: ${{ inputs.java-version }}
+
+       - name: Restore compilation cache
+         uses: /WorldOfScala/actions/restore-compilation-cache@master
+         with:
+            key: ${{ inputs.cache-key }}
+       - name: Compile (main & tests)
+         shell: bash
+         run: VERSION=`git describe --tags --abbrev=0 | sed "s/v//"` sbt '${{ inputs.command }}'
+       - name: Setup Pages
+         uses: actions/configure-pages@v5
+       - name: Upload artifact
+         if: ${{ inputs.publish == 'true' }}
+         uses: actions/upload-pages-artifact@v4
+         with:
+            path: "target/site"
+  publish:
+    needs: website
+    runs-on: ubuntu-latest
+    if: ${{ inputs.publish == 'true' }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 
+
+
+
