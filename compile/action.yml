@@ -1,8 +1,11 @@
 name: Compile
 description: Compiles the project
 inputs:
-  checkout-submodules:
+  checkout:
     description: Whether to checkout the code (true/false)
+    default: "true"
+  checkout-submodules:
+    description: Whether to checkout submodules (true/false)
     default: "true"
   scala-version:
     description: Scala version to use for tests (2, 2.13, 3 ... etc...)
@@ -27,6 +30,7 @@ runs:
   using: "composite"
   steps:
     - name: Checkout code
+      if: ${{ inputs.checkout == 'true' }}
       uses: actions/checkout@v3
       with:
         submodules: ${{ inputs.checkout-submodules }}
