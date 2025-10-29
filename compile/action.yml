@@ -22,6 +22,8 @@ inputs:
   cache-key:
     description: Cache key
     default: target
+  script:
+    description: Script to run
   command:
     description: Compile command to run
     default: compile; Test / compile
@@ -47,7 +49,13 @@ runs:
       with:
         key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
 
+    - name: Compile (custom script)
+      if: ${{ inputs.script != '' }}
+      shell: bash
+      run: ${{ inputs.script }}
+    
     - name: Compile (main & tests)
+      if: ${{ inputs.script == '' }}
       shell: bash
       run: |
        if [ "${{ inputs.scala-version }}" != "" ]; then
