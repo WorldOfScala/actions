@@ -45,7 +45,7 @@ runs:
     - name: Cache lookup
       id: compilation-cache
       if: ${{ !contains(github.event.pull_request.body, 'ci:skip-cache') }}
-      uses: ./actions/restore-compilation-cache/action.yml
+      uses: .github/actions/restore-compilation-cache
       with:
         key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
 
