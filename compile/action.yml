@@ -45,7 +45,7 @@ runs:
     - name: Cache lookup
       id: compilation-cache
       if: ${{ !contains(github.event.pull_request.body, 'ci:skip-cache') }}
-      uses: /WorldOfScala/actions/restore-compilation-cache/action.yml@master
+      uses: /WorldOfScala/actions/restore-compilation-cache/action.yml@test
       with:
         key: ${{ inputs.cache-key }}-${{ inputs.scala-version }}
 
