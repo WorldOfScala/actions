@@ -36,6 +36,7 @@ on:
       script:
         description: Test command to run
         type: string
+        default: ./scripts/gh-pages.sh'
       publish:
         description: Whether to deploy the website
         type: boolean
