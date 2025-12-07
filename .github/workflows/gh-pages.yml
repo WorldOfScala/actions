@@ -5,6 +5,11 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+
 on:
   workflow_call:
     inputs:
@@ -23,15 +28,19 @@ on:
       cache-key:
         description: Cache key
         type: string
-        default: target
-      command:
+        default: "target"
+      node-version:
+        description: Node version to setup (23)
+        type: number
+        default: 23
+      script:
         description: Test command to run
         type: string
-        default: website
+        default: ./scripts/gh-pages.sh'
       publish:
         description: Whether to deploy the website
         type: boolean
-        default: false
+        default: true
 
 
 
@@ -40,11 +49,25 @@ on:
 jobs:
   website:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
        - name: Checkout code
-         uses: actions/checkout@v3
+         uses: actions/checkout@v6
+
+       - name: Fetch tags
+         run: git fetch --prune --unshallow --tags        
+
        - name: Setup Graphviz
-         uses: ts-graphviz/setup-graphviz@v2      
+         uses: ts-graphviz/setup-graphviz@v2
+
+       - name: Set up Node
+         uses: actions/setup-node@v6
+         with:
+          node-version: ${{ inputs.node-version }}
+
        - name: Set up SBT
          uses: /WorldOfScala/actions/setup-sbt@master
          with:
@@ -52,36 +75,24 @@ jobs:
            java-version: ${{ inputs.java-version }}
 
        - name: Restore compilation cache
+         if: ${{ inputs.cache-key != '' && !contains(github.event.pull_request.body, 'ci:skip-cache') }}
          uses: /WorldOfScala/actions/restore-compilation-cache@master
          with:
             key: ${{ inputs.cache-key }}
        - name: Compile (main & tests)
          shell: bash
-         run: VERSION=`git describe --tags --abbrev=0 | sed "s/v//"` sbt '${{ inputs.command }}'
-  publish:
+#         run: VERSION=`git describe --tags --abbrev=0 | sed "s/v//"` sbt '${{ inputs.command }}'
+         run: ${{ inputs.script }}
 
-    needs: website
-    runs-on: ubuntu-latest
-    if: ${{ inputs.publish }}
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-
-    # Deploy to the github-pages environment
-
-    # Specify runner + deployment step
-
-    steps:
        - name: Setup Pages
          uses: actions/configure-pages@v5
        - name: Upload artifact
-         if: ${{ inputs.publish == 'true' }}
+         if: ${{ inputs.publish }}
          uses: actions/upload-pages-artifact@v4
          with:
             path: "target/site"
-
        - name: Deploy to GitHub Pages
+         if: ${{ inputs.publish }}
          id: deployment
          uses: actions/deploy-pages@v4 
 
