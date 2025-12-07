@@ -86,12 +86,12 @@ jobs:
        - name: Setup Pages
          uses: actions/configure-pages@v5
        - name: Upload artifact
-         if: ${{ inputs.publish == 'true' }}
+         if: ${{ inputs.publish }}
          uses: actions/upload-pages-artifact@v4
          with:
             path: "target/site"
        - name: Deploy to GitHub Pages
-         if: ${{ inputs.publish == 'true' }}
+         if: ${{ inputs.publish }}
          id: deployment
          uses: actions/deploy-pages@v4 
 
