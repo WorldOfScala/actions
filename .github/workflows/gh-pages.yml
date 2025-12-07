@@ -9,6 +9,7 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+
 on:
   workflow_call:
     inputs:
@@ -38,7 +39,7 @@ on:
       publish:
         description: Whether to deploy the website
         type: boolean
-        default: false
+        default: true
 
 
 
@@ -47,6 +48,10 @@ on:
 jobs:
   website:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
        - name: Checkout code
          uses: actions/checkout@v6
