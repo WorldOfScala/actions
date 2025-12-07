@@ -28,7 +28,7 @@ on:
       cache-key:
         description: Cache key
         type: string
-        default: ""
+        default: "target"
       node-version:
         description: Node version to setup (23)
         type: number
