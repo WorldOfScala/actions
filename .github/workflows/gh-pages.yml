@@ -69,14 +69,14 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
        - name: Set up SBT
-         uses: /WorldOfScala/actions/setup-sbt@master
+         uses: WorldOfScala/actions/setup-sbt@master
          with:
            distribution: ${{ inputs.java-distribution }}
            java-version: ${{ inputs.java-version }}
 
        - name: Restore compilation cache
          if: ${{ inputs.cache-key != '' && !contains(github.event.pull_request.body, 'ci:skip-cache') }}
-         uses: /WorldOfScala/actions/restore-compilation-cache@master
+         uses: WorldOfScala/actions/restore-compilation-cache@master
          with:
             key: ${{ inputs.cache-key }}
        - name: Compile (main & tests)
