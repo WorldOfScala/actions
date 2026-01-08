@@ -1,0 +1,35 @@
+name: Linter
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+on:
+  workflow_call:
+    inputs:
+      java-distribution:
+        description: JDK vendor (zulu, temurin, etc.)
+        type: string
+        default: zulu
+      java-version:
+        description: Java version to setup (25)
+        type: number
+        default: 25
+      memory-limit:
+        description: Memory limit for sbt (2048 MB)
+        type: number
+        default: 2048
+      cache-key:
+        description: Cache key
+        type: string
+        default: target
+      command:
+        description: Linter command to run
+        type: string
+        default: lintAll
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Linter
+        run: echo "Linter step goes here"
